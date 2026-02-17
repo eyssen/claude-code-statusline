@@ -160,7 +160,7 @@ The script extracts all fields in a single `jq` call, then assembles the output 
 | STD | Standard speed (gray) | Same as above, shown when not in fast mode |
 | $X.XX | Session cost | `cost.total_cost_usd` — actual API cost (Pro/Max users see $0.00) |
 | [████░░] X% | Context window usage | `context_window.used_percentage` — 20-char progress bar, color-coded: 🟢 <50%, 🟡 50-75%, 🔴 >75% |
-| (Xk/Xk) | Tokens used/total | `total_input_tokens + total_output_tokens` / `context_window_size` |
+| (Xk/Xk) | Tokens used/total | Derived from `used_percentage * context_window_size` / `context_window_size` |
 | ⏱ | Session duration | `cost.total_duration_ms` — auto-formats: Xs, XmXs, or XhXm |
 | 📡 N | API call count | Counts `"type":"assistant"` entries in transcript JSONL |
 | +X/-Y | Lines changed | `cost.total_lines_added` / `cost.total_lines_removed` — green/red colored |
@@ -303,7 +303,7 @@ A fast mode allapotot a transcript JSONL fajlbol olvassa ki (`"speed":"fast"` va
 | STD | Standard sebesseg (szurke) | Ugyanaz, mint fent — ha nincs fast mod |
 | $X.XX | Session koltseg | `cost.total_cost_usd` — valos API koltseg (Pro/Max: $0.00) |
 | [████░░] X% | Context ablak hasznalat | `context_window.used_percentage` — 20 karakteres progress bar, szin: 🟢 <50%, 🟡 50-75%, 🔴 >75% |
-| (Xk/Xk) | Tokenek (hasznalt/osszes) | `total_input_tokens + total_output_tokens` / `context_window_size` |
+| (Xk/Xk) | Tokenek (hasznalt/osszes) | `used_percentage * context_window_size` / `context_window_size` |
 | ⏱ | Session idotartam | `cost.total_duration_ms` — formatum: Xs, XmXs, vagy XhXm |
 | 📡 N | API hivasok szama | `"type":"assistant"` bejegyzesek szama a transcript JSONL-ben |
 | +X/-Y | Sorok valtozasa | `cost.total_lines_added` / `cost.total_lines_removed` — zold/piros |

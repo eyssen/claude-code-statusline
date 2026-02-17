@@ -24,8 +24,6 @@ eval "$(echo "$data" | jq -r '
   @sh "lines_removed=\(.cost.total_lines_removed // 0)",
   @sh "ctx_pct=\(.context_window.used_percentage // 0)",
   @sh "ctx_size=\(.context_window.context_window_size // 200000)",
-  @sh "total_input=\(.context_window.total_input_tokens // 0)",
-  @sh "total_output=\(.context_window.total_output_tokens // 0)",
   @sh "cwd=\(.workspace.current_dir // "")",
   @sh "transcript=\(.transcript_path // "")"
 ')"
@@ -39,7 +37,6 @@ cost_formatted=$(printf "\$%.2f" "$cost")
 # === CONTEXT WINDOW ===
 ctx_pct=${ctx_pct:-0}
 ctx_size=${ctx_size:-200000}
-total_tokens=$((total_input + total_output))
 
 # Cap percentage at 100
 [ "$ctx_pct" -gt 100 ] && ctx_pct=100
@@ -62,10 +59,11 @@ for ((i=0; i<filled; i++)); do bar+="█"; done
 for ((i=0; i<empty; i++)); do bar+="░"; done
 bar+="]\033[0m"
 
-# Format token counts as Xk
-total_k=$((total_tokens / 1000))
+# Format token counts as Xk (derive current usage from percentage, not cumulative totals)
+ctx_used=$((ctx_pct * ctx_size / 100))
+ctx_used_k=$((ctx_used / 1000))
 ctx_size_k=$((ctx_size / 1000))
-tokens_info=$(printf "%b %d%% (%dk/%dk)" "$bar" "$ctx_pct" "$total_k" "$ctx_size_k")
+tokens_info=$(printf "%b %d%% (%dk/%dk)" "$bar" "$ctx_pct" "$ctx_used_k" "$ctx_size_k")
 
 # === SESSION DURATION ===
 duration_ms=${duration_ms:-0}
