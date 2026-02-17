@@ -38,7 +38,11 @@ fi
 # Copy statusline.sh
 if [ -f "$TARGET_SCRIPT" ]; then
     echo "[WARN] $TARGET_SCRIPT already exists."
-    read -rp "Overwrite? [y/N] " answer
+    if [ ! -t 0 ]; then
+        answer="y"
+    else
+        read -rp "Overwrite? [y/N] " answer
+    fi
     if [[ ! "$answer" =~ ^[Yy]$ ]]; then
         echo "Skipping file copy."
     else

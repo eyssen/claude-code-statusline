@@ -38,6 +38,22 @@ A customizable, informative status bar for [Claude Code](https://docs.anthropic.
 
 ## Installation
 
+### One-liner install
+
+```bash
+git clone https://github.com/kalmarr/claude-code-statusline.git /tmp/claude-code-statusline && /tmp/claude-code-statusline/install.sh && rm -rf /tmp/claude-code-statusline
+```
+
+### Install via Claude Code prompt
+
+Paste this into Claude Code and it will install the statusline for you:
+
+> Install the Claude Code statusline from https://github.com/kalmarr/claude-code-statusline — clone to /tmp, run install.sh, then clean up. Restart Claude Code when done.
+
+### Claude Code slash command
+
+For repeated use, copy `commands/install-statusline.md` to `~/.claude/commands/`, then run `/install-statusline` inside Claude Code anytime.
+
 ### Quick install
 
 ```bash
@@ -135,6 +151,23 @@ Claude Code pipes a JSON object to the statusline command's stdin on every updat
 
 The script extracts all fields in a single `jq` call, then assembles the output string with ANSI color codes.
 
+## Icons & Logic
+
+| Icon | Meaning | Source / Logic |
+|------|---------|---------------|
+| 🤖 | Model name | `model.display_name` from Claude Code JSON input |
+| ⚡FAST | Fast mode active (yellow) | Reads transcript JSONL: first checks for `Fast mode ON/OFF` toggle, falls back to `"speed":"fast"` field |
+| STD | Standard speed (gray) | Same as above, shown when not in fast mode |
+| $X.XX | Session cost | `cost.total_cost_usd` — actual API cost (Pro/Max users see $0.00) |
+| [████░░] X% | Context window usage | `context_window.used_percentage` — 20-char progress bar, color-coded: 🟢 <50%, 🟡 50-75%, 🔴 >75% |
+| (Xk/Xk) | Tokens used/total | `total_input_tokens + total_output_tokens` / `context_window_size` |
+| ⏱ | Session duration | `cost.total_duration_ms` — auto-formats: Xs, XmXs, or XhXm |
+| 📡 N | API call count | Counts `"type":"assistant"` entries in transcript JSONL |
+| +X/-Y | Lines changed | `cost.total_lines_added` / `cost.total_lines_removed` — green/red colored |
+| 🌿 | Git branch | `git branch --show-current` in workspace dir, `*` suffix = uncommitted changes |
+| 📁 | Project folder | `basename` of `workspace.current_dir` |
+| │ | Separator | Visual divider between sections |
+
 ## Troubleshooting
 
 ### Statusline not appearing
@@ -202,6 +235,22 @@ Testreszabhato, informativ status bar a [Claude Code](https://docs.anthropic.com
 
 ## Telepites
 
+### Egyvonalas telepites
+
+```bash
+git clone https://github.com/kalmarr/claude-code-statusline.git /tmp/claude-code-statusline && /tmp/claude-code-statusline/install.sh && rm -rf /tmp/claude-code-statusline
+```
+
+### Telepites Claude Code prompttal
+
+Ird be ezt a Claude Code-ba, es elvegzi a telepitest:
+
+> Telepitsd a Claude Code statusline-t a https://github.com/kalmarr/claude-code-statusline repobol — klonozd /tmp-be, futtasd az install.sh-t, majd takarits. Inditsd ujra a Claude Code-ot ha kesz.
+
+### Claude Code slash parancs
+
+Ismetelt hasznalathoz masold a `commands/install-statusline.md` fajlt a `~/.claude/commands/` mappaba, majd futtasd az `/install-statusline` parancsot barmikor.
+
 ### Gyors telepites
 
 ```bash
@@ -244,6 +293,23 @@ Ez minden frissiteskor elmenti a nyers JSON bemenetet a `~/.claude/debug_status.
 A Claude Code minden frissiteskor egy JSON objektumot pipe-ol a statusline parancs stdin-jere. A script egyetlen `jq` hivassal kiolvassa az osszes mezot, majd ANSI szinkodokkal osszeallitja a kimenetet.
 
 A fast mode allapotot a transcript JSONL fajlbol olvassa ki (`"speed":"fast"` vagy `"speed":"standard"`).
+
+## Ikonok es logika
+
+| Ikon | Jelentes | Forras / Logika |
+|------|----------|-----------------|
+| 🤖 | Modell neve | `model.display_name` a Claude Code JSON bemenetbol |
+| ⚡FAST | Fast mod aktiv (sarga) | Transcript JSONL-bol: eloszor `Fast mode ON/OFF` toggle-t keres, fallback: `"speed":"fast"` |
+| STD | Standard sebesseg (szurke) | Ugyanaz, mint fent — ha nincs fast mod |
+| $X.XX | Session koltseg | `cost.total_cost_usd` — valos API koltseg (Pro/Max: $0.00) |
+| [████░░] X% | Context ablak hasznalat | `context_window.used_percentage` — 20 karakteres progress bar, szin: 🟢 <50%, 🟡 50-75%, 🔴 >75% |
+| (Xk/Xk) | Tokenek (hasznalt/osszes) | `total_input_tokens + total_output_tokens` / `context_window_size` |
+| ⏱ | Session idotartam | `cost.total_duration_ms` — formatum: Xs, XmXs, vagy XhXm |
+| 📡 N | API hivasok szama | `"type":"assistant"` bejegyzesek szama a transcript JSONL-ben |
+| +X/-Y | Sorok valtozasa | `cost.total_lines_added` / `cost.total_lines_removed` — zold/piros |
+| 🌿 | Git branch | `git branch --show-current`, `*` = nem commitolt valtozasok |
+| 📁 | Projekt mappa | `basename` a `workspace.current_dir`-bol |
+| │ | Elvalaszto | Vizualis hatarolo a szekciok kozott |
 
 ## Licenc
 
