@@ -146,4 +146,26 @@ output="${output} │ ${cost_formatted} │ ${tokens_info} │ ${duration_str}"
 
 output="${output} │ ${lines_info} │ 🌿 ${git_info} │ 📁 ${project_dir}"
 
+# === LIVE SNAPSHOT (opt-in via STATUSLINE_STATS_DIR) ===
+if [ -n "${STATUSLINE_STATS_DIR:-}" ] && [ -n "$session_id" ]; then
+    mkdir -p "$STATUSLINE_STATS_DIR" 2>/dev/null
+    snap_tmp=$(mktemp "${STATUSLINE_STATS_DIR}/.${session_id}.XXXXXX" 2>/dev/null) || snap_tmp=""
+    if [ -n "$snap_tmp" ]; then
+        if printf '%s' "$data" | jq --arg ts "$(date -u +%FT%TZ)" '{
+            session_id: (.session_id // ""),
+            cwd: (.workspace.current_dir // ""),
+            model: .model,
+            effort: .effort,
+            cost: .cost,
+            context_window: .context_window,
+            version: .version,
+            snapshot_at: $ts
+        }' > "$snap_tmp" 2>/dev/null; then
+            mv "$snap_tmp" "${STATUSLINE_STATS_DIR}/${session_id}.live.json"
+        else
+            rm -f "$snap_tmp"
+        fi
+    fi
+fi
+
 printf "%b" "$output"
