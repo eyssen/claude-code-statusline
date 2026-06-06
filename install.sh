@@ -70,12 +70,12 @@ if [ -f "$SETTINGS_FILE" ]; then
     else
         # Add statusLine config
         tmp=$(mktemp)
-        jq '. + {"statusLine": {"command": "~/.claude/statusline.sh"}}' "$SETTINGS_FILE" > "$tmp" && mv "$tmp" "$SETTINGS_FILE"
+        jq '. + {"statusLine": {"type": "command", "command": "~/.claude/statusline.sh"}}' "$SETTINGS_FILE" > "$tmp" && mv "$tmp" "$SETTINGS_FILE"
         echo "[OK] Added statusLine config to $SETTINGS_FILE"
     fi
 else
     # Create settings.json with statusLine config
-    echo '{"statusLine": {"command": "~/.claude/statusline.sh"}}' | jq . > "$SETTINGS_FILE"
+    echo '{"statusLine": {"type": "command", "command": "~/.claude/statusline.sh"}}' | jq . > "$SETTINGS_FILE"
     echo "[OK] Created $SETTINGS_FILE with statusLine config"
 fi
 

@@ -74,6 +74,7 @@ chmod +x ~/.claude/statusline.sh
 ```json
 {
   "statusLine": {
+    "type": "command",
     "command": "~/.claude/statusline.sh"
   }
 }
@@ -88,6 +89,7 @@ The statusline is configured via `~/.claude/settings.json`:
 ```json
 {
   "statusLine": {
+    "type": "command",
     "command": "~/.claude/statusline.sh"
   }
 }
@@ -271,6 +273,7 @@ chmod +x ~/.claude/statusline.sh
 ```json
 {
   "statusLine": {
+    "type": "command",
     "command": "~/.claude/statusline.sh"
   }
 }
