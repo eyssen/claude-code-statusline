@@ -25,7 +25,9 @@ eval "$(echo "$data" | jq -r '
   @sh "ctx_pct=\(.context_window.used_percentage // 0)",
   @sh "ctx_size=\(.context_window.context_window_size // 200000)",
   @sh "cwd=\(.workspace.current_dir // "")",
-  @sh "transcript=\(.transcript_path // "")"
+  @sh "transcript=\(.transcript_path // "")",
+  @sh "effort=\(.effort.level // "")",
+  @sh "session_id=\(.session_id // "")"
 ')"
 
 # === PROJECT FOLDER ===
@@ -105,6 +107,10 @@ if [ -f "$transcript" ]; then
     fi
 fi
 
+# === EFFORT LEVEL ===
+effort_info=""
+[ -n "$effort" ] && effort_info="🎚 ${effort}"
+
 # === LINES ADDED/REMOVED ===
 lines_added=${lines_added:-0}
 lines_removed=${lines_removed:-0}
@@ -130,6 +136,9 @@ output="🤖 ${model}"
 
 # Append fast mode indicator right after model name
 [ -n "$speed_info" ] && output="${output} ${speed_info}"
+
+# Append effort indicator after the speed indicator
+[ -n "$effort_info" ] && output="${output} ${effort_info}"
 
 output="${output} │ ${cost_formatted} │ ${tokens_info} │ ${duration_str}"
 
